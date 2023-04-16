@@ -44,7 +44,7 @@ const Starships = () => {
 
   return (
     <div className="App">
-      <table>
+      <table className="Text-body">
         <thead>
           <tr>
             <th>Starships</th>
