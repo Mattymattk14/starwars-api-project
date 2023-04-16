@@ -4,56 +4,43 @@ import "./App.css";
 
 const Starships = () => {
   const [starships, setStarships] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [pilots, setPilots] = useState([]);
 
-  const getAllStarships = async (url) => {
-    setLoading(true);
+  const getAllStarships = async () => {
+    const results = [];
 
     try {
-      const response = await axios.get(url);
-      const newStarships = [...starships, ...response.data.results];
-
-      if (response.data.next) {
-        getAllStarships(response.data.next);
-      } else {
-        setStarships(newStarships);
-        setLoading(false);
+      for (let i = 1; i < 5; i++) {
+        const response = await axios.get(
+          `https://swapi.dev/api/starships/?page=${i}`
+        );
+        results.push(...response.data.results);
+        console.log("ships", response.data.results);
       }
     } catch (err) {
-      setError(err.message);
-      setLoading(false);
+      console.log(err.message);
     }
+    setStarships(results);
   };
 
   const getAllPeople = async () => {
     const results = [];
+
     try {
       for (let i = 1; i < 10; i++) {
         const response = await axios.get(
           `https://swapi.dev/api/people/?page=${i}`
         );
-        results.push = [...response.data.results];
+        results.push(...response.data.results);
       }
-    } catch (err) {
-      console.log(err.message);
-    }
+    } catch (err) {}
     setPilots(results);
   };
 
   useEffect(() => {
-    getAllStarships("https://swapi.dev/api/starships/");
+    getAllStarships();
     getAllPeople();
   }, []);
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="App">
